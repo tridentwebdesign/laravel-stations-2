@@ -17,6 +17,9 @@ class MovieFactory extends Factory
             //
             'title' => $this->faker->realText(10),
             'image_url' => $this->faker->imageUrl(640, 480),
+            'published_year' => $this->faker->year(),
+            'is_showing' => $this->faker->boolean(),
+            'description' => $this->faker->realText(100),
         ];
     }
 }

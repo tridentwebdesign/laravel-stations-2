@@ -3,7 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Movie;
-use App\Practice;
+use App\Models\Practice;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -17,6 +17,5 @@ class DatabaseSeeder extends Seeder
     {
         Practice::factory(10)->create();
         Movie::factory(10)->create();
-    
     }
 }
