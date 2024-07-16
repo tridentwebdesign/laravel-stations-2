@@ -14,10 +14,27 @@ class MovieController extends Controller
         return view('admin.movies.index', ['movies' => $movies]);
     }
 
-    public function getMovie()
+    public function getMovie(Request $request)
     {
-        $movie = Movie::all();
-        return view('getMovie', ['movies' => $movie]);
+        $query = Movie::query();
+
+        // 検索キーワードがある場合
+        if ($request->filled('keyword')) {
+            $keyword = $request->input('keyword');
+            $query->where(function($q) use ($keyword) {
+                $q->where('title', 'like', '%' . $keyword . '%')
+                ->orWhere('description', 'like', '%' . $keyword . '%');
+            });
+        }
+
+        // 公開状態のフィルター
+        if ($request->filled('is_showing')) {
+            $query->where('is_showing', $request->input('is_showing'));
+        }
+
+        // ページネーション
+        $movies = $query->paginate(20);
+        return view('getMovie', ['movies' => $movies, 'keyword' => $request->input('keyword'), 'is_showing' => $request->input('is_showing')]);
     }
 
     public function createMovie()
@@ -51,5 +68,13 @@ class MovieController extends Controller
         $movie->update($request->validated());
 
         return redirect()->route('admin.movies.edit', $movie->id)->with('success', 'Movie updated successfully.');
+    }
+
+    public function destroyMovie($id)
+    {
+        $movie = Movie::findOrFail($id);
+        $movie->delete();
+
+        return redirect()->route('admin.movies.index')->with('success', 'Movie deleted successfully.');
     }
 }

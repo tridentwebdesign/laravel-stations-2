@@ -7,6 +7,14 @@
     <title>Movie</title>
 </head>
 <body>
+    <h1>Movies List</h1>
+    <a href="/movies/">ビュー確認用</a>
+
+    @if (session('success'))
+        <div>
+            {{ session('success') }}
+        </div>
+    @endif
     <table>
         <thead>
             <tr>
@@ -31,8 +39,22 @@
         <td>{{ $movie->created_at }}</td>
         <td>{{ $movie->updated_at }}</td>
         <td><button><a href="{{ route('admin.movies.edit', $movie->id) }}">編集</a></button></td>
+        <td>
+            <form id="delete-form-{{ $movie->id }}" action="{{ route('admin.movies.destroy', $movie->id) }}" method="POST" style="display: inline;">
+                @csrf
+                @method('DELETE')
+                <button type="button" onclick="confirmDelete({{ $movie->id }})">削除</button>
+            </form>
+        </td>
     </tr>
     @endforeach
 </table>
+    <script>
+        function confirmDelete(movieId) {
+            if (confirm('削除しますか？')) {
+                document.getElementById('delete-form-' + movieId).submit();
+            }
+        }
+    </script>
 </body>
 </html>

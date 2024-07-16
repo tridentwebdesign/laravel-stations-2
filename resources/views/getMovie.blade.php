@@ -7,6 +7,31 @@
     <title>Movie</title>
 </head>
 <body>
+    <h1>映画一覧</h1>
+    <!-- 検索フォーム -->
+    <form method="GET" action="{{ route('movies.index') }}">
+        <div>
+            <label for="keyword">検索:</label>
+            <input type="text" id="keyword" name="keyword" value="{{ request('keyword') }}">
+        </div>
+        <div>
+            <label>
+                <input type="radio" name="is_showing" checked value="" {{ request('is_showing') === null ? 'checked' : '' }}>
+                すべて
+            </label>
+            <label>
+                <input type="radio" name="is_showing" value="1" {{ request('is_showing') === '1' ? 'checked' : '' }}>
+                公開中
+            </label>
+            <label>
+                <input type="radio" name="is_showing" value="0" {{ request('is_showing') === '0' ? 'checked' : '' }}>
+                公開予定
+            </label>
+        </div>
+        <div>
+            <button type="submit">検索</button>
+        </div>
+    </form>
     <table>
         <thead>
             <tr>
@@ -30,9 +55,11 @@
         <td>{{ $movie->description }}</td>
         <td>{{ $movie->created_at }}</td>
         <td>{{ $movie->updated_at }}</td>
-        <td><button><a href="{{ route('admin.movies.edit', $movie->id) }}">編集</a></button></td>
     </tr>
     @endforeach
 </table>
+
+ <!-- ページネーションリンク -->
+ {{ $movies->appends(request()->query())->links() }}
 </body>
 </html>

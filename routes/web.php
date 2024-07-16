@@ -25,8 +25,11 @@ Route::get('/getPractice', [PracticeController::class, 'getPractice']);
 use App\Http\Controllers\MovieController;
 
 Route::get('/admin/movies', [MovieController::class, 'index'])->name('admin.movies.index');
-
 Route::get('/admin/movies/create', [MovieController::class, 'createMovie'])->name('admin.movies.create');
 Route::post('/admin/movies/store', [MovieController::class, 'storeMovie'])->name('admin.movies.store');
 Route::get('/admin/movies/{id}/edit', [MovieController::class, 'editMovie'])->name('admin.movies.edit');
 Route::patch('/admin/movies/{id}/update', [MovieController::class, 'updateMovie'])->name('admin.movies.update');
+Route::delete('/admin/movies/{id}/destroy', [MovieController::class, 'destroyMovie'])->name('admin.movies.destroy');
+
+//adminでない映画一覧ページ
+Route::get('/movies', [MovieController::class, 'getMovie'])->name('movies.index');
