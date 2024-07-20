@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 use App\Models\Movie;
+use App\Models\Genre; 
 use App\Http\Requests\CreateMovieRequest;
 use App\Http\Requests\UpdateMovieRequest;
 use Illuminate\Http\Request;
@@ -16,7 +17,7 @@ class MovieController extends Controller
 
     public function getMovie(Request $request)
     {
-        $query = Movie::query();
+        $query = Movie::query()->with('genre');
 
         // 検索キーワードがある場合
         if ($request->filled('keyword')) {
@@ -43,29 +44,24 @@ class MovieController extends Controller
     }
 
     public function storeMovie(CreateMovieRequest $request)
-    {
-        // マスアサインメントを使用してデータベースに保存する
-        $movie = Movie::create([
-            'title' => $request->title,
-            'image_url' => $request->image_url,
-            'published_year' => $request->published_year,
-            'is_showing' => (bool) $request->is_showing,
-            'description' => $request->description,
-        ]);
+{
+        $genre = Genre::firstOrCreate(['name' => $request->input('genre')]);
+        $movie = Movie::create($request->validated() + ['genre_id' => $genre->id]);
 
-        return redirect()->route('admin.movies.create')->with('success', 'Movie created successfully.');
-    }
+    return redirect()->route('admin.movies.create')->with('success', 'Movie created successfully.');
+}
 
     public function editMovie($id)
     {
-        $movie = Movie::findOrFail($id);
+        $movie = Movie::with('genre')->findOrFail($id);
         return view('editMovie', compact('movie'));
     }
 
     public function updateMovie(UpdateMovieRequest $request, $id)
     {
         $movie = Movie::findOrFail($id);
-        $movie->update($request->validated());
+        $genre = Genre::firstOrCreate(['name' => $request->input('genre')]);
+        $movie->update($request->validated() + ['genre_id' => $genre->id]);
 
         return redirect()->route('admin.movies.edit', $movie->id)->with('success', 'Movie updated successfully.');
     }

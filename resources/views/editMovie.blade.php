@@ -7,7 +7,7 @@
     <title>Edit Movie</title>
 </head>
 <body>
-    @if ($errors->any())
+@if ($errors->any())
         <div>
             <ul>
                 @foreach ($errors->all() as $error)
@@ -22,7 +22,7 @@
             {{ session('success') }}
         </div>
     @endif
-
+    <h1>映画編集</h1>
     <form action="{{ route('admin.movies.update', $movie->id) }}" method="POST">
         @csrf
         @method('PATCH')
@@ -47,6 +47,8 @@
             <label for="description">概要</label>
             <textarea id="description" name="description" required>{{ old('description', $movie->description) }}</textarea>
         </div>
+            <label for="genre">ジャンル</label>
+            <input type="text" id="genre" name="genre" value="{{ old('genre', optional($movie->genre)->name) }}">
         <div>
             <button type="submit">更新する</button>
         </div>

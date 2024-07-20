@@ -26,9 +26,10 @@ class CreateMovieRequest extends FormRequest
         return [
             'title' => 'required|string|max:255|unique:movies',
             'image_url' => 'required|url|max:255',
-            'published_year' => 'required|integer',
+            'published_year' => 'required|integer|min:1900|max:' . date('Y'),  // 公開年の範囲を追加
             'is_showing' => 'required|boolean',
             'description' => 'required|string',
+            'genre' => 'nullable|string|max:255',
         ];
     }
 }

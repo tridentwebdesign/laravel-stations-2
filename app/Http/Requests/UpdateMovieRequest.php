@@ -25,12 +25,12 @@ class UpdateMovieRequest extends FormRequest
     public function rules()
     {
         return [
-            'title' => ['required', Rule::unique('movies')->ignore($this->id)],
-            'image_url' => ['required', 'url'],
-            'published_year' => ['required', 'gte:1900'],
-            'description' => ['required'],
-            'is_showing' => ['required', 'boolean'],
-            // 'genre' => ['required'],
+            'title' => 'required|string|max:255|unique:movies,title,' . $this->route('movie'),
+            'image_url' => 'required|url|max:255',
+            'published_year' => 'required|integer|min:1900|max:' . date('Y'),  // 公開年の範囲を追加
+            'is_showing' => 'required|boolean',
+            'description' => 'required|string',
+            'genre' => 'nullable|string|max:255',
         ];
     }
 }
