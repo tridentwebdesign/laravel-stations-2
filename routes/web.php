@@ -31,6 +31,11 @@ Route::get('/admin/movies/{movie}/edit', [MovieController::class, 'editMovie'])-
 Route::patch('/admin/movies/{movie}/update', [MovieController::class, 'updateMovie'])->name('admin.movies.update');
 Route::delete('/admin/movies/{id}/destroy', [MovieController::class, 'destroyMovie'])->name('admin.movies.destroy');
 
-
 //adminでない映画一覧ページ
 Route::get('/movies', [MovieController::class, 'getMovie'])->name('movies.index');
+
+//座席一覧ページ
+use App\Http\Controllers\SheetController;
+
+Route::get('/sheets', [SheetController::class, 'index']);
+

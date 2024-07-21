@@ -18,5 +18,8 @@ class DatabaseSeeder extends Seeder
 
         // 次に映画データをシード
         $this->call(MoviesTableSeeder::class);
+
+        // 座席データをシード
+        $this->call(SheetTableSeeder::class);
     }
 }
