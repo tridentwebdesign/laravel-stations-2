@@ -14,10 +14,10 @@ class AddUniqueToTitleInMoviesTable extends Migration
     public function up()
     {
         Schema::table('movies', function (Blueprint $table) {
-            $table->unsignedBigInteger('genre_id')->nullable()->after('id')->comment('ジャンルID');
-            $table->foreign('genre_id')->references('id')->on('genres')->onDelete('cascade');
+            // $table->unique('title'); // 既にユニークキー制約が存在するため、削除
         });
     }
+
 
     /**
      * Reverse the migrations.
@@ -27,8 +27,7 @@ class AddUniqueToTitleInMoviesTable extends Migration
     public function down()
     {
         Schema::table('movies', function (Blueprint $table) {
-            $table->dropForeign(['genre_id']);
-            $table->dropColumn('genre_id');
+            // $table->dropUnique(['title']); // 既にユニークキー制約が存在するため、削除
         });
     }
 }

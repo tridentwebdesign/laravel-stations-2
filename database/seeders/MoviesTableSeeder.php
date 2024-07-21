@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use App\Models\Movie;
+use App\Models\Genre;
 
 class MoviesTableSeeder extends Seeder
 {
@@ -14,10 +15,12 @@ class MoviesTableSeeder extends Seeder
      */
     public function run()
     {
-        // 既存のデータをクリア
-        Movie::truncate();
+        // ジャンルがシードされている前提で、ランダムにジャンルIDを取得
+        $genres = Genre::all();
 
-        // 映画データをファクトリで生成
-        Movie::factory()->count(10)->create(); // 必要に応じて生成する数を調整
+        Movie::factory(10)->create()->each(function ($movie) use ($genres) {
+            $movie->genre_id = $genres->random()->id;
+            $movie->save();
+        });
     }
 }

@@ -1,39 +1,38 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Models\Movie;
-use App\Models\Genre; 
+use App\Models\Genre;
 use App\Http\Requests\CreateMovieRequest;
 use App\Http\Requests\UpdateMovieRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class MovieController extends Controller
-{
+{   
     public function index()
     {
-        $movies = Movie::all();
-        return view('admin.movies.index', ['movies' => $movies]);
+        $movies = Movie::with('genre')->paginate(20);
+        return view('admin.movies.index', compact('movies'));
     }
 
     public function getMovie(Request $request)
     {
-        $query = Movie::query()->with('genre');
+        $query = Movie::with('genre');
 
-        // 検索キーワードがある場合
         if ($request->filled('keyword')) {
             $keyword = $request->input('keyword');
             $query->where(function($q) use ($keyword) {
                 $q->where('title', 'like', '%' . $keyword . '%')
-                ->orWhere('description', 'like', '%' . $keyword . '%');
+                   ->orWhere('description', 'like', '%' . $keyword . '%');
             });
         }
 
-        // 公開状態のフィルター
         if ($request->filled('is_showing')) {
             $query->where('is_showing', $request->input('is_showing'));
         }
 
-        // ページネーション
         $movies = $query->paginate(20);
         return view('getMovie', ['movies' => $movies, 'keyword' => $request->input('keyword'), 'is_showing' => $request->input('is_showing')]);
     }
@@ -44,12 +43,21 @@ class MovieController extends Controller
     }
 
     public function storeMovie(CreateMovieRequest $request)
-{
-        $genre = Genre::firstOrCreate(['name' => $request->input('genre')]);
-        $movie = Movie::create($request->validated() + ['genre_id' => $genre->id]);
+    {
+        try {
+            DB::transaction(function () use ($request) {
+                $genre = Genre::firstOrCreate(['name' => $request->input('genre')]);
+                Movie::create($request->validated() + ['genre_id' => $genre->id]);
+            });
 
-    return redirect()->route('admin.movies.create')->with('success', 'Movie created successfully.');
-}
+            return redirect()->route('admin.movies.create')->with('success', 'Movie created successfully.');
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json($e->errors(), 500);
+        } catch (\Exception $e) {
+            return redirect()->route('admin.movies.create')->withErrors('Failed to create movie. Please try again.');
+        }
+    }
+
 
     public function editMovie($id)
     {
@@ -59,17 +67,28 @@ class MovieController extends Controller
 
     public function updateMovie(UpdateMovieRequest $request, $id)
     {
-        $movie = Movie::findOrFail($id);
-        $genre = Genre::firstOrCreate(['name' => $request->input('genre')]);
-        $movie->update($request->validated() + ['genre_id' => $genre->id]);
+        try {
+            DB::transaction(function () use ($request, $id) {
+                $genre = Genre::firstOrCreate(['name' => $request->input('genre')]);
+                $movie = Movie::findOrFail($id);
+                $movie->update($request->validated() + ['genre_id' => $genre->id]);
+            });
 
-        return redirect()->route('admin.movies.edit', $movie->id)->with('success', 'Movie updated successfully.');
+            return redirect()->route('admin.movies.edit', $id)->with('success', 'Movie updated successfully.');
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json($e->errors(), 500);
+        } catch (\Exception $e) {
+            return redirect()->route('admin.movies.edit', $id)->withErrors('Failed to update movie. Please try again.');
+        }
     }
+        
 
     public function destroyMovie($id)
     {
-        $movie = Movie::findOrFail($id);
-        $movie->delete();
+        DB::transaction(function () use ($id) {
+            $movie = Movie::findOrFail($id);
+            $movie->delete();
+        });
 
         return redirect()->route('admin.movies.index')->with('success', 'Movie deleted successfully.');
     }

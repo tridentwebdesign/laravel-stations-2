@@ -28,7 +28,7 @@ Route::get('/admin/movies', [MovieController::class, 'index'])->name('admin.movi
 Route::get('/admin/movies/create', [MovieController::class, 'createMovie'])->name('admin.movies.create');
 Route::post('/admin/movies/store', [MovieController::class, 'storeMovie'])->name('admin.movies.store');
 Route::get('/admin/movies/{movie}/edit', [MovieController::class, 'editMovie'])->name('admin.movies.edit');
-Route::patch('/admin/movies/{movie}', [MovieController::class, 'updateMovie'])->name('admin.movies.update');
+Route::patch('/admin/movies/{movie}/update', [MovieController::class, 'updateMovie'])->name('admin.movies.update');
 Route::delete('/admin/movies/{id}/destroy', [MovieController::class, 'destroyMovie'])->name('admin.movies.destroy');
 
 

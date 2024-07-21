@@ -3,7 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
+use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class UpdateMovieRequest extends FormRequest
 {
@@ -27,10 +28,28 @@ class UpdateMovieRequest extends FormRequest
         return [
             'title' => 'required|string|max:255|unique:movies,title,' . $this->route('movie'),
             'image_url' => 'required|url|max:255',
-            'published_year' => 'required|integer|min:1900|max:' . date('Y'),  // 公開年の範囲を追加
+            'published_year' => 'required|integer',
             'is_showing' => 'required|boolean',
             'description' => 'required|string',
-            'genre' => 'nullable|string|max:255',
+            'genre' => 'required|string|max:255',
         ];
+    }
+
+    protected function failedValidation(Validator $validator)
+    {
+        $errors = $validator->errors();
+
+        // タイトルの文字数制限を超えた場合は500エラーを返す
+        if ($errors->has('title') && $errors->first('title') === 'The title must not be greater than 255 characters.') {
+            throw new HttpResponseException(response()->json($errors, 500));
+        }
+
+        // それ以外のバリデーションエラーは302ステータスを返す
+        throw new HttpResponseException(
+            redirect()
+                ->back()
+                ->withInput()
+                ->withErrors($errors)
+        );
     }
 }
