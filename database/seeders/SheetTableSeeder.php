@@ -15,8 +15,15 @@ class SheetTableSeeder extends Seeder
     public function run()
     {
         {
-            // Sheet::truncate(); // テーブルをクリア
-            Sheet::query()->delete(); // 代わりにdeleteを使用
+            // 外部キー制約を無効にする
+            \DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+            
+            // テーブルをクリア
+            Sheet::query()->delete();
+
+            // 外部キー制約を再度有効にする
+            \DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+
     
             Sheet::insert([
                 ['id' => 1, 'column' => 1, 'row' => 'a'],

@@ -16,7 +16,7 @@ class CreateSheetsTable extends Migration
         Schema::create('sheets', function (Blueprint $table) {
             $table->id();
             $table->integer('column')->comment('列');
-            $table->string('row')->comment('行');
+            $table->string('row', 255)->comment('行');
             $table->timestamps();
         });
     }

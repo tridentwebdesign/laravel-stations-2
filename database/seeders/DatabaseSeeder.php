@@ -13,13 +13,6 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // まずジャンルをシード
-        $this->call(GenresTableSeeder::class);
-
-        // 次に映画データをシード
-        $this->call(MoviesTableSeeder::class);
-
-        // 座席データをシード
         $this->call(SheetTableSeeder::class);
     }
 }
