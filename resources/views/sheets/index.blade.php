@@ -7,20 +7,19 @@
     <title>座席表</title>
 </head>
 <body>
-    <h1>スクリーン</h1>
+    <h1>座席表</h1>
     <table border="1">
-      <caption>座席表</caption>
         <tr>
-            <th>1列目</th>
-            <th>2列目</th>
-            <th>3列目</th>
-            <th>4列目</th>
-            <th>5列目</th>
+            <td></td>
+            <td></td>
+            <td>スクリーン</td>
+            <td></td>
+            <td></td>
         </tr>
-        @foreach ($sheets as $row => $columns)
+        @foreach (['a', 'b', 'c'] as $row)
             <tr>
-                @foreach ($columns as $column)
-                    <td>{{ $row }}-{{ $column->column }}</td>
+                @foreach (range(1, 5) as $column)
+                    <td>{{ $row . '-' . $column }}</td>
                 @endforeach
             </tr>
         @endforeach

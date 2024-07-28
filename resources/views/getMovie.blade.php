@@ -44,6 +44,7 @@
                 <th>概要</th>
                 <th>登録日時</th>
                 <th>更新日時</th>
+                <th>詳細</th>
             </tr>
         </thead>
     @foreach ($movies as $movie)
@@ -57,6 +58,7 @@
         <td>{{ $movie->description }}</td>
         <td>{{ $movie->created_at }}</td>
         <td>{{ $movie->updated_at }}</td>
+        <td><a href="{{ route('movies.show', $movie->id) }}">詳細</a></td>
     </tr>
     @endforeach
 </table>

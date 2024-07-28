@@ -43,7 +43,10 @@
                     <td>{{ $movie->description }}</td>
                     <td>{{ $movie->created_at }}</td>
                     <td>{{ $movie->updated_at }}</td>
-                    <td><button><a href="{{ route('admin.movies.edit', $movie->id) }}">編集</a></button></td>
+                    <td>
+                        <button><a href="{{ route('admin.movies.edit', $movie->id) }}">編集</a></button>
+                        <button><a href="{{ route('movies.show', $movie->id) }}">詳細</a></button>
+                    </td>
                     <td>
                         <form id="delete-form-{{ $movie->id }}" action="{{ route('admin.movies.destroy', $movie->id) }}" method="POST" style="display: inline;">
                             @csrf

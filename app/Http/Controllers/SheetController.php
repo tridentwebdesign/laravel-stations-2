@@ -7,10 +7,9 @@ use Illuminate\Http\Request;
 
 class SheetController extends Controller
 {
-    //
     public function index()
     {
-        $sheets = Sheet::all()->groupBy('row');
+        $sheets = Sheet::all();
         return view('sheets.index', compact('sheets'));
     }
 }

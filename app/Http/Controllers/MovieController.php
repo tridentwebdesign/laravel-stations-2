@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Movie;
 use App\Models\Genre;
+use App\Models\Schedule;
 use App\Http\Requests\CreateMovieRequest;
 use App\Http\Requests\UpdateMovieRequest;
 use Illuminate\Http\Request;
@@ -80,6 +81,14 @@ class MovieController extends Controller
         } catch (\Exception $e) {
             return redirect()->route('admin.movies.edit', $id)->withErrors('Failed to update movie. Please try again.');
         }
+    }
+
+    public function show($id)
+    {
+        $movie = Movie::findOrFail($id);
+        $schedules = Schedule::where('movie_id', $id)->orderBy('start_time', 'asc')->get();
+
+        return view('movies.show', compact('movie', 'schedules'));
     }
         
 

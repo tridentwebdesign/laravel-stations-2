@@ -13,6 +13,11 @@ class Movie extends Model
         'title', 'image_url', 'published_year', 'is_showing', 'description', 'genre_id'
     ];
 
+    public function schedules()
+    {
+        return $this->hasMany(Schedule::class);
+    }
+
     public function genre()
     {
         return $this->belongsTo(Genre::class);
