@@ -83,14 +83,28 @@ class MovieController extends Controller
         }
     }
 
+    // 映画詳細ページを表示するメソッド
     public function show($id)
     {
         $movie = Movie::findOrFail($id);
-        $schedules = Schedule::where('movie_id', $id)->orderBy('start_time', 'asc')->get();
-
-        return view('movies.show', compact('movie', 'schedules'));
+        return view('admin.movies.show', compact('movie'));
     }
-        
+
+    // 全映画のスケジュール一覧ページを表示するメソッド
+    public function indexSchedules()
+    {
+        $movies = Movie::with('schedules')->get();
+        return view('admin.schedules.index', compact('movies'));
+    }
+
+    // 特定の映画のスケジュールページを表示するメソッド
+    public function schedules($id)
+    {
+        $movie = Movie::findOrFail($id);
+        $schedules = Schedule::where('movie_id', $id)->orderBy('start_time')->get();
+        return view('admin.schedules.show', compact('movie', 'schedules'));
+    }
+                
 
     public function destroyMovie($id)
     {

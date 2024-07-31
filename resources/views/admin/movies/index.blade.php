@@ -46,6 +46,7 @@
                     <td>
                         <button><a href="{{ route('admin.movies.edit', $movie->id) }}">編集</a></button>
                         <button><a href="{{ route('movies.show', $movie->id) }}">詳細</a></button>
+                        <a href="{{ route('admin.movies.schedules', $movie->id) }}">スケジュール</a>
                     </td>
                     <td>
                         <form id="delete-form-{{ $movie->id }}" action="{{ route('admin.movies.destroy', $movie->id) }}" method="POST" style="display: inline;">

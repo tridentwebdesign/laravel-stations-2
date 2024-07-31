@@ -31,16 +31,28 @@ Route::get('/admin/movies/{movie}/edit', [MovieController::class, 'editMovie'])-
 Route::patch('/admin/movies/{movie}/update', [MovieController::class, 'updateMovie'])->name('admin.movies.update');
 Route::delete('/admin/movies/{id}/destroy', [MovieController::class, 'destroyMovie'])->name('admin.movies.destroy');
 
+// 映画詳細ページのルート
+Route::get('/admin/movies/{id}', [MovieController::class, 'show'])->name('admin.movies.show');
+
+// 特定の映画のスケジュールページのルート
+Route::get('/admin/movies/{id}/schedules', [MovieController::class, 'schedules'])->name('admin.movies.schedules');
+
 //adminでない映画一覧ページ
 Route::get('/movies', [MovieController::class, 'getMovie'])->name('movies.index');
 
 //映画詳細ページ
 Route::get('/movies/{id}', [MovieController::class, 'show'])->name('movies.show');
 
+// スケジュール一覧ページのルート
+Route::get('/admin/schedules', [MovieController::class, 'indexSchedules'])->name('admin.schedules.index');
+
+
+
 //座席一覧ページ
 use App\Http\Controllers\SheetController;
 
 Route::get('/sheets', [SheetController::class, 'index'])->name('sheets.index');
+
 
 use App\Http\Controllers\ScheduleController;
 
@@ -52,4 +64,5 @@ Route::post('/admin/movies/{movie_id}/schedules/store', [ScheduleController::cla
 Route::get('/admin/schedules/{id}/edit', [ScheduleController::class, 'edit'])->name('admin.schedules.edit');
 Route::patch('/admin/schedules/{id}/update', [ScheduleController::class, 'update'])->name('admin.schedules.update');
 Route::delete('/admin/schedules/{id}/destroy', [ScheduleController::class, 'destroy'])->name('admin.schedules.destroy');
+
 

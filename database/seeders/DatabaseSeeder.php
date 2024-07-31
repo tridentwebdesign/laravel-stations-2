@@ -12,6 +12,7 @@ class DatabaseSeeder extends Seeder
             SheetTableSeeder::class,
             GenresTableSeeder::class,
             MoviesTableSeeder::class,
+            SchedulesTableSeeder::class, 
         ]);
     }
 }
